@@ -40,3 +40,21 @@ lib/generated_plugin_registrant.dart
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+**/*.iml
+**/*.txt
+**/.gradle/
+**/local.properties
+**/.idea/
+**/.DS_Store
+**/build/
+**/captures/
+**/.externalNativeBuild/
+
+# Python script generated files
+/script/localizator-master/__pycache__/
+
+# Auto delivery to Firebase using script
+deployment/lastBuild.txt
+deployment/listedIssues.txt
+deployment/releaseNotes.txt
