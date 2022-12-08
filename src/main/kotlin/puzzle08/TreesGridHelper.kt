@@ -21,10 +21,6 @@ class TreesGridHelper {
                             x = xIndex,
                             y = yIndex,
                             height = char.digitToInt(),
-//                            isVisibleFromTop = yIndex == 0,
-//                            isVisibleFromLeft = xIndex == 0,
-//                            isVisibleFromRight = xIndex == fileLines.size - 1,
-//                            isVisibleFromBottom = yIndex == fileLines.size - 1
                         )
                     }
                     .toMutableList()
@@ -56,15 +52,12 @@ class TreesGridHelper {
                                 line[xIndex]
                             }
                             .reversed()
-                        val higherThanHowManyTop = getTreesSmallerThanGivenTree(
-                            givenTree = tree,
-                            listOfTrees = topColumn
-                        )
-                        resultGridOfTrees[yIndex][xIndex].isVisibleFromTop = higherThanHowManyTop.size == topColumn.size
-                        resultGridOfTrees[yIndex][xIndex].numberOfTreesOnTop = getTreesSeenFromGivenTree(
+                        getInfosForTree(
                             givenTree = tree,
                             listOfTrees = topColumn,
-                        ).size
+                            treeIsVisible = resultGridOfTrees[yIndex][xIndex].isVisibleFromTop,
+                            numberOfTreesInDirection = resultGridOfTrees[yIndex][xIndex].numberOfTreesOnTop,
+                        )
 
                         // Left
                         val leftRow = lineOfTrees
@@ -73,15 +66,12 @@ class TreesGridHelper {
                                 toIndex = xIndex
                             )
                             .reversed()
-                        val higherThanHowManyLeft = getTreesSmallerThanGivenTree(
-                            givenTree = tree,
-                            listOfTrees = leftRow
-                        )
-                        resultGridOfTrees[yIndex][xIndex].isVisibleFromLeft = higherThanHowManyLeft.size == leftRow.size
-                        resultGridOfTrees[yIndex][xIndex].numberOfTreesOnLeft = getTreesSeenFromGivenTree(
+                        getInfosForTree(
                             givenTree = tree,
                             listOfTrees = leftRow,
-                        ).size
+                            treeIsVisible = resultGridOfTrees[yIndex][xIndex].isVisibleFromLeft,
+                            numberOfTreesInDirection = resultGridOfTrees[yIndex][xIndex].numberOfTreesOnLeft,
+                        )
 
                         // Right
                         val rightRow = lineOfTrees
@@ -90,15 +80,12 @@ class TreesGridHelper {
                                 toIndex = lineOfTrees.size,
                             )
                             .drop(1)
-                        val higherThanHowManyRight = getTreesSmallerThanGivenTree(
-                            givenTree = tree,
-                            listOfTrees = rightRow
-                        )
-                        resultGridOfTrees[yIndex][xIndex].isVisibleFromRight = higherThanHowManyRight.size == rightRow.size
-                        resultGridOfTrees[yIndex][xIndex].numberOfTreesOnRight = getTreesSeenFromGivenTree(
+                        getInfosForTree(
                             givenTree = tree,
                             listOfTrees = rightRow,
-                        ).size
+                            treeIsVisible = resultGridOfTrees[yIndex][xIndex].isVisibleFromRight,
+                            numberOfTreesInDirection = resultGridOfTrees[yIndex][xIndex].numberOfTreesOnRight,
+                        )
 
                         // Bottom
                         val bottomColumn = givenGridOfTrees
@@ -110,18 +97,31 @@ class TreesGridHelper {
                                 line[xIndex]
                             }
                             .drop(1)
-                        val higherThanHowManyBottom = getTreesSmallerThanGivenTree(
-                            givenTree = tree,
-                            listOfTrees = bottomColumn
-                        )
-                        resultGridOfTrees[yIndex][xIndex].isVisibleFromBottom = higherThanHowManyBottom.size == bottomColumn.size
-                        resultGridOfTrees[yIndex][xIndex].numberOfTreesOnBottom = getTreesSeenFromGivenTree(
+                        getInfosForTree(
                             givenTree = tree,
                             listOfTrees = bottomColumn,
-                        ).size
+                            treeIsVisible = resultGridOfTrees[yIndex][xIndex].isVisibleFromBottom,
+                            numberOfTreesInDirection = resultGridOfTrees[yIndex][xIndex].numberOfTreesOnBottom,
+                        )
                     }
             }
         return resultGridOfTrees
+    }
+
+    private fun getInfosForTree(
+        givenTree: Tree,
+        listOfTrees: List<Tree>,
+        treeIsVisible: BooleanWrapper,
+        numberOfTreesInDirection: IntWrapper,
+    ) {
+        val seenFromGivenTree = getTreesSeenFromGivenTree(
+            givenTree = givenTree,
+            listOfTrees = listOfTrees,
+        )
+        numberOfTreesInDirection.field = seenFromGivenTree.size
+        treeIsVisible.field = seenFromGivenTree.filter { tree ->
+            givenTree.height > tree.height
+        }.size == listOfTrees.size
     }
 
     private fun getTreesSeenFromGivenTree(givenTree: Tree, listOfTrees: List<Tree>): List<Tree> {
@@ -132,18 +132,6 @@ class TreesGridHelper {
             } else {
                 smallerTrees += treeInList
                 return smallerTrees
-            }
-        }
-        return smallerTrees
-    }
-
-    private fun getTreesSmallerThanGivenTree(givenTree: Tree, listOfTrees: List<Tree>): List<Tree> {
-        val smallerTrees = mutableListOf<Tree>()
-        listOfTrees.forEachIndexed { _, treeInList ->
-            if (givenTree.height > treeInList.height) {
-                smallerTrees += treeInList
-            } else {
-                return@forEachIndexed
             }
         }
         return smallerTrees
