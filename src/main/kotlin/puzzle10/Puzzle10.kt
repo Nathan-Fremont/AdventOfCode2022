@@ -13,7 +13,7 @@ private val instructionsExecutor = InstructionsExecutor()
 
 fun main(args: Array<String>) {
     println("main")
-    fileUtils.getFileContentFromFile( )
+    fileUtils.getFileContentFromFile()
         ?.also { fileContent ->
 
             val instructions = instructionsParser.parseFileToInstructions(fileContent = fileContent)
@@ -22,13 +22,14 @@ fun main(args: Array<String>) {
             }
             println("main ${"filteredInstructions" to filteredInstructions.second}")
 
-            val signalStrengthForCycles = instructionsExecutor.executeInstructions(
+            val instructionsExecutorResult = instructionsExecutor.executeInstructions(
                 instructionsToExecute = filteredInstructions.first,
             )
 
-            println("main ${"signalStrengthForCycles" to signalStrengthForCycles}")
+            println("main ${"instructionsExecutorResult" to instructionsExecutorResult}")
 
-            val filteredSignals = signalStrengthForCycles
+            val filteredSignals = instructionsExecutorResult
+                .listOfSignalStrength
                 .filter { signalStrength ->
                     val tempSignStrCycle = signalStrength.cycle + 20
                     tempSignStrCycle % 40 == 0
@@ -43,5 +44,11 @@ fun main(args: Array<String>) {
 
             val sumOfSignals = calculatedSignals.sum()
             println("main ${"sumOfSignals" to sumOfSignals}")
+
+            println("===== CRT SCREEN =====")
+            instructionsExecutorResult.crtScreen
+                .forEach { line ->
+                    println(line.joinToString(separator = "",))
+                }
         }
 }
