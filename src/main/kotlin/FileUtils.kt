@@ -7,12 +7,14 @@ class FileUtils(
     private val inputFileNameExample: String,
 ) {
     fun getFileContentFromFile(): String? {
+        println("getFileContentFromFile Try to open file $inputFileName")
         return readFileContent(
             fileName = inputFileName,
         )
     }
 
     fun getFileContentFromFileExample(): String? {
+        println("getFileContentFromFileExample Try to open file $inputFileNameExample")
         return readFileContent(
             fileName = inputFileNameExample,
         )
@@ -25,11 +27,30 @@ class FileUtils(
             }
 
         return if (filePath != null) {
+            println("readFileContent file $fileName exists")
             Files.readString(
                 filePath
             )
         } else {
+            println("readFileContent file $fileName does not exists")
             null
         }
+    }
+
+    companion object {
+        fun fileToLines(fileContent: String): List<String> {
+            return fileContent.replace(CHARACTER_TO_REMOVE, EMPTY_CHARACTER)
+                .split(NEW_LINE_DELIMITER)
+                .map { line ->
+                    line.trim()
+                }
+                .filter { line ->
+                    line.isNotBlank()
+                }
+        }
+
+        private const val CHARACTER_TO_REMOVE = "\r"
+        private const val EMPTY_CHARACTER = ""
+        private const val NEW_LINE_DELIMITER = "\n"
     }
 }
