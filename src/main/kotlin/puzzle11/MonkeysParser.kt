@@ -9,7 +9,7 @@ class MonkeysParser() {
             fileContent = fileContent,
             delimiter = MONKEY_DELIMITER
         )
-        println("parseFileToMonkeys ${"monkeysLines" to monkeysLines}")
+//        println("parseFileToMonkeys ${"monkeysLines" to monkeysLines}")
 
         val monkeys = monkeysLines
             .map { monkeyContent ->
@@ -17,7 +17,7 @@ class MonkeysParser() {
                     monkeyContent = monkeyContent,
                 )
             }
-        println("parseFileToMonkeys ${"monkeys" to monkeys}")
+//        println("parseFileToMonkeys ${"monkeys" to monkeys}")
 
         return monkeys
     }
@@ -57,7 +57,7 @@ class MonkeysParser() {
         return monkey
     }
 
-    private fun getListOfStartingItems(line: String): MutableList<Int> {
+    private fun getListOfStartingItems(line: String): MutableList<ULong> {
         val startingItems = line
             .run {
                 FileUtils.fileToLines(
@@ -66,7 +66,7 @@ class MonkeysParser() {
                 )
             }
             .map { item ->
-                item.toInt()
+                item.toULong()
             }
             .toMutableList()
 //        println("getListOfStartingItems ${"startingItems" to startingItems}")
@@ -82,7 +82,7 @@ class MonkeysParser() {
             .trim()
 //        println("getOperationOnItem ${"operationString" to operationString}")
 
-        val addOrMultiply: (Int, Int) -> Int = if (operationString.contains("+")) {
+        val addOrMultiply: (ULong, ULong) -> ULong = if (operationString.contains("+")) {
             { value1, value2 ->
                 value1 + value2
             }
@@ -97,14 +97,21 @@ class MonkeysParser() {
                 variable.trim()
             }
 
+        val otherValue = if (variables[1] == "old") {
+            null
+        } else {
+            variables[1].toULong()
+        }
+
         val operationOnItem = OperationOnItem(
             operationString = line,
             operation = { old ->
-                if (variables[0] == "old" && variables[1] == "old") {
-                    addOrMultiply(old, old)
-                } else {
-                    addOrMultiply(old, variables[1].toInt())
-                }
+//                old
+//                if (variables[0] == "old" && variables[1] == "old") {
+                addOrMultiply(old, otherValue ?: old)
+//                } else {
+//                    addOrMultiply(old, variables[1].toBigInteger())
+//                }
             },
         )
 //        println("getOperationOnItem ${"operationOnItem" to operationOnItem}")
@@ -121,8 +128,8 @@ class MonkeysParser() {
                     .trim()
             }
         // Test: divisible by 23
-        val divisibleByValue = filteredLines[0]
-            .toInt()
+        val divisorValue = filteredLines[0]
+            .toULong()
 
         // If true: throw to monkey 2
         val monkeyTargetWhenTrue = filteredLines[1]
@@ -135,14 +142,15 @@ class MonkeysParser() {
 
         val testOnItem = TestOnItem(
             testLines = testLines,
+            divisorValue = divisorValue,
             test = { value ->
-                value % divisibleByValue == 0
+                value % divisorValue == ULong.MIN_VALUE
             },
             monkeyTargetWhenTrue = monkeyTargetWhenTrue,
             monkeyTargetWhenFalse = monkeyTargetWhenFalse,
         )
 
-        println("getTestOnItem ${"testOnItem" to testOnItem}")
+//        println("getTestOnItem ${"testOnItem" to testOnItem}")
         return testOnItem
     }
 
