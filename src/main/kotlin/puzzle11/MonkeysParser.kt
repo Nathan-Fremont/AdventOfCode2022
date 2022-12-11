@@ -93,6 +93,9 @@ class MonkeysParser() {
         }
         val variables = operationString
             .split("+", "*")
+            .map { variable ->
+                variable.trim()
+            }
 
         val operationOnItem = OperationOnItem(
             operationString = line,
