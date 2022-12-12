@@ -22,7 +22,7 @@ internal class InstructionsParser {
 
     fun parseFileToInstructions(fileContent: String): List<Instruction> {
         println("parseFileToInstructions")
-        val fileLines = FileUtils.fileToLines(fileContent = fileContent)
+        val fileLines = FileUtils.splitStringWithDelimiter(fileContent = fileContent)
 
         return fileLines.map { line ->
             val splitted = line

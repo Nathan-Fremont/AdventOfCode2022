@@ -38,7 +38,7 @@ class FileUtils(
     }
 
     companion object {
-        fun fileToLines(fileContent: String, delimiter: String = NEW_LINE_DELIMITER): List<String> {
+        fun splitStringWithDelimiter(fileContent: String, delimiter: String = NEW_LINE_DELIMITER): List<String> {
             return fileContent.replace(CHARACTER_TO_REMOVE, EMPTY_CHARACTER)
                 .split(delimiter)
                 .map { line ->

@@ -5,7 +5,7 @@ import FileUtils
 class MonkeysParser() {
     fun parseFileToMonkeys(fileContent: String): List<Monkey> {
         println("parseFileToMonkeys")
-        val monkeysLines = FileUtils.fileToLines(
+        val monkeysLines = FileUtils.splitStringWithDelimiter(
             fileContent = fileContent,
             delimiter = MONKEY_DELIMITER
         )
@@ -24,7 +24,7 @@ class MonkeysParser() {
 
     private fun parseLinesToMonkey(monkeyContent: String): Monkey {
         val monkeyLines = FileUtils
-            .fileToLines(
+            .splitStringWithDelimiter(
                 fileContent = monkeyContent,
             )
 //        println("parseLinesToMonkey ${"monkeyLines" to monkeyLines}")
@@ -60,7 +60,7 @@ class MonkeysParser() {
     private fun getListOfStartingItems(line: String): MutableList<ULong> {
         val startingItems = line
             .run {
-                FileUtils.fileToLines(
+                FileUtils.splitStringWithDelimiter(
                     fileContent = substring(startIndex = this.indexOf(":") + 1),
                     delimiter = ","
                 )
