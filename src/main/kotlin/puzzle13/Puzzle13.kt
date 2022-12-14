@@ -8,10 +8,17 @@ private val fileUtils = FileUtils(
     inputFileName = INPUT_FILE_NAME,
     inputFileNameExample = INPUT_FILE_NAME_EXAMPLE,
 )
+private val distressSignalParser = DistressSignalParser()
+private val distressSignalExecutor = DistressSignalExecutor()
+
 fun main(args: Array<String>) {
     println("main")
-    fileUtils.getFileContentFromFile()
+    fileUtils.getFileContentFromFileExample()
         ?.also { fileContent ->
+            distressSignalParser.parseFileContentToDistressSignals(
+                fileContent = fileContent,
+            )
 
+            distressSignalExecutor.stuffDistressSignals()
         }
 }
