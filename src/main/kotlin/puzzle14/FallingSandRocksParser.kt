@@ -4,7 +4,7 @@ import FileUtils
 import kotlin.math.roundToInt
 
 class FallingSandRocksParser {
-    fun parseFileToListOfRocksPaths(fileContent: String): List<List<Rock>> {
+    fun parseFileToListOfRocksPaths(fileContent: String): List<List<RockPoint>> {
         println("parseFileToRocks")
         val fileLines = FileUtils
             .splitStringWithDelimiter(
@@ -21,7 +21,7 @@ class FallingSandRocksParser {
             listOfRockPoints.map { rockPoint ->
                 val rockPointAsDecimal = rockPoint.toFloat()
                 val rockPointAsInt = rockPointAsDecimal.toInt()
-                Rock(
+                RockPoint(
                     x = rockPointAsInt,
                     y = ((rockPointAsDecimal - rockPointAsInt.toFloat()) * 10f).roundToInt()
                 )

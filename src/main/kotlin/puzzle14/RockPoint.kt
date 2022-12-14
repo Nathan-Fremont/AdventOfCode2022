@@ -1,6 +1,6 @@
 package puzzle14
 
-data class Rock(
+data class RockPoint(
     val x: Int,
     val y: Int,
 )
