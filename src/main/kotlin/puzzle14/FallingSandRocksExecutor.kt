@@ -17,11 +17,28 @@ class FallingSandRocksExecutor {
                 rock.x
             }
 
-        val delta = (maxXValue.x - minXValue.x) + 1
-        println("createGridWithListOfRocksPaths ${"minXValue" to minXValue}, ${"maxXValue" to maxXValue}, ${"delta" to delta}")
+        val minYValue = listOfRocksPaths
+            .flatten()
+            .minBy { rock ->
+                rock.y
+            }
+
+        val maxYValue = listOfRocksPaths
+            .flatten()
+            .maxBy { rock ->
+                rock.y
+            }
+
+        val deltaX = (maxXValue.x - minXValue.x) + 1
+        val deltaY = (maxYValue.y - minYValue.y) + 1
+        println("createGridWithListOfRocksPaths" +
+                "${"minXValue" to minXValue}," +
+                "${"maxXValue" to maxXValue}," +
+                "${"deltaX" to deltaX}" +
+                "${"deltaY" to deltaY}")
 
         gridOfSquares = mutableListOf()
-        repeat(GRID_HEIGHT) { yIndex ->
+        repeat(maxYValue.y) { yIndex ->
             gridOfSquares += mutableListOf<GridSquare>()
             repeat(VOID_PADDING) { voidIndex ->
                 gridOfSquares.last() += GridSquare.Void(
@@ -30,7 +47,7 @@ class FallingSandRocksExecutor {
                     yValueInGrid = yIndex,
                 )
             }
-            for (xIndex in 0 until delta) {
+            for (xIndex in 0 until deltaX) {
                 gridOfSquares.last() += GridSquare.Air(
                     originalXValue = minXValue.x + xIndex,
                     xValueInGrid = xIndex + VOID_PADDING,
@@ -40,14 +57,14 @@ class FallingSandRocksExecutor {
             repeat(VOID_PADDING) { voidIndex ->
                 gridOfSquares.last() += GridSquare.Void(
                     originalXValue = -1,
-                    xValueInGrid = VOID_PADDING + delta + voidIndex,
+                    xValueInGrid = VOID_PADDING + deltaX + voidIndex,
                     yValueInGrid = yIndex,
                 )
             }
         }
         repeat(VOID_PADDING) { voidIndex ->
             gridOfSquares += mutableListOf<GridSquare>()
-            for (xIndex in 0 until delta + VOID_PADDING * 2) {
+            for (xIndex in 0 until deltaX + VOID_PADDING * 2) {
                 gridOfSquares.last() += GridSquare.Void(
                     originalXValue = -1,
                     xValueInGrid = voidIndex,
@@ -306,7 +323,7 @@ class FallingSandRocksExecutor {
     }
 
     companion object {
-        private const val GRID_HEIGHT = 10
+        private const val GRID_HEIGHT = 100
         private const val VOID_PADDING = 2
     }
 }

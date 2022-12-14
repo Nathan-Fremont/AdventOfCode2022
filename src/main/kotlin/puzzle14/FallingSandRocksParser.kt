@@ -8,25 +8,28 @@ class FallingSandRocksParser {
         println("parseFileToRocks")
         val fileLines = FileUtils
             .splitStringWithDelimiter(
-                fileContent = fileContent.replace(",", "."),
+                fileContent = fileContent
             )
 
         val listOfRocksPaths = fileLines
             .map { line ->
-            val listOfRockPoints = FileUtils.splitStringWithDelimiter(
-                fileContent = line,
-                delimiter = ROCK_POINTS_DELIMITER,
-            )
-
-            listOfRockPoints.map { rockPoint ->
-                val rockPointAsDecimal = rockPoint.toFloat()
-                val rockPointAsInt = rockPointAsDecimal.toInt()
-                RockPoint(
-                    x = rockPointAsInt,
-                    y = ((rockPointAsDecimal - rockPointAsInt.toFloat()) * 10f).roundToInt()
+                val listOfRockPoints = FileUtils.splitStringWithDelimiter(
+                    fileContent = line,
+                    delimiter = ROCK_POINTS_DELIMITER,
                 )
+
+                listOfRockPoints.map { rockPoint ->
+                    val splittedRockPoint = FileUtils
+                        .splitStringWithDelimiter(
+                            fileContent = rockPoint,
+                            delimiter = ",",
+                        )
+                    RockPoint(
+                        x = splittedRockPoint[0].toInt(),
+                        y = splittedRockPoint[1].toInt()
+                    )
+                }
             }
-        }
         println("parseFileToRocks ${"listOfRocksPaths" to listOfRocksPaths}")
 
         return listOfRocksPaths
