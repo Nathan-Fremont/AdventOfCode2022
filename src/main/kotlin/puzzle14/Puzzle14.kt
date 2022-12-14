@@ -13,7 +13,7 @@ private val fallingSandRocksExecutor = FallingSandRocksExecutor()
 
 fun main(args: Array<String>) {
     println("main")
-    fileUtils.getFileContentFromFile()
+    fileUtils.getFileContentFromFileExample()
         ?.also { fileContent ->
             val listOfRocksPaths = fallingSandRocksParser.parseFileToListOfRocksPaths(
                 fileContent = fileContent,

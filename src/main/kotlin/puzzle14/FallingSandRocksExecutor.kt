@@ -323,7 +323,7 @@ class FallingSandRocksExecutor {
     }
 
     companion object {
-        private const val GRID_HEIGHT = 100
-        private const val VOID_PADDING = 2
+        private const val VOID_PADDING = 0
+        private const val AIR_PADDING = 1
     }
 }
