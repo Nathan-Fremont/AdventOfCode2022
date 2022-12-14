@@ -11,12 +11,12 @@ class DistressSignalParser {
         )
 
         val pairsOfSignals = fileLines
-            .zipWithNext()
+            .chunked(2)
             .map { pairOfSignals ->
                 parseLineToDistressSignal(
-                    distressSignalAsString = pairOfSignals.first,
+                    distressSignalAsString = pairOfSignals[0],
                 ) to parseLineToDistressSignal(
-                    distressSignalAsString = pairOfSignals.second,
+                    distressSignalAsString = pairOfSignals[1],
                 )
             }
         return pairsOfSignals
@@ -26,7 +26,7 @@ class DistressSignalParser {
         println("parseLineToDistressSignal")
         var tempString = distressSignalAsString
         val foundDistressSignal = findArray(distressSignalAsString = tempString)
-        println("parseLineToDistressSignal ${"foundDistressSignal" to foundDistressSignal}")
+//        println("parseLineToDistressSignal ${"foundDistressSignal" to foundDistressSignal}")
 
         return foundDistressSignal
     }
@@ -54,14 +54,14 @@ class DistressSignalParser {
             .joinToString(separator = "")
             .removePrefix(START_ARRAY.toString())
             .removeSuffix(END_ARRAY.toString())
-        println("findArray ${"modifiedString" to modifiedString}")
+//        println("findArray ${"modifiedString" to modifiedString}")
 
         val arrayOfModified = FileUtils
             .splitStringWithDelimiter(
                 modifiedString,
                 delimiter = ARRAY_ROOT_LAYER_DELIMITER.toString(),
             )
-        println("findArray ${"arrayOfModified" to arrayOfModified}")
+//        println("findArray ${"arrayOfModified" to arrayOfModified}")
 
         val distressed = arrayOfModified
             .map { value ->

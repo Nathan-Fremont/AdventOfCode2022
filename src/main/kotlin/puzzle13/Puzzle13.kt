@@ -13,12 +13,20 @@ private val distressSignalExecutor = DistressSignalExecutor()
 
 fun main(args: Array<String>) {
     println("main")
-    fileUtils.getFileContentFromFileExample()
+    fileUtils.getFileContentFromFile()
         ?.also { fileContent ->
-            distressSignalParser.parseFileContentToDistressSignals(
+            val pairsOfSignals = distressSignalParser.parseFileContentToDistressSignals(
                 fileContent = fileContent,
             )
 
-            distressSignalExecutor.stuffDistressSignals()
+            val signalsWithResult = distressSignalExecutor.executePairsOfSignals(pairsOfSignals)
+            val sumOfIndices = signalsWithResult
+                .filter { distressSignalResult ->
+                    distressSignalResult.isInCorrectOrder
+                }
+                .sumOf { distressSignalResult ->
+                    distressSignalResult.indexInList
+                }
+            println("main ${"sumOfIndices" to sumOfIndices}")
         }
 }
