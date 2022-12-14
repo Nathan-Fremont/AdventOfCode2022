@@ -1,5 +1,7 @@
 package puzzle13
 
+import kotlin.math.max
+
 class DistressSignalExecutor {
     fun executePairsOfSignals(pairsOfSignals: List<Pair<DistressSignal?, DistressSignal?>>): List<DistressSignalResult> {
         println("executePairsOfSignals")
@@ -34,12 +36,18 @@ class DistressSignalExecutor {
             null -> listOf()
         }
 
-        var leftIndex = 0
-        var rightIndex = 0
+        var index = 0
 
-        while (leftIndex < leftList.size) {
-            val leftValue = leftList.getOrNull(leftIndex)
-            val rightValue = rightList.getOrNull(rightIndex)
+
+        if (leftList.isEmpty()) {
+            return true
+        } else if (rightList.isEmpty()) {
+            return false
+        }
+
+        while (index < max(leftList.size, rightList.size)) {
+            val leftValue = leftList.getOrNull(index)
+            val rightValue = rightList.getOrNull(index)
 
             if (leftValue == null) {
                 return true
@@ -55,6 +63,16 @@ class DistressSignalExecutor {
                     } else if (leftValue.value < rightValue.value) {
                         return true
                     }
+
+                    index += 1
+                }
+
+                leftValue is DistressSignal.Multiple
+                        && rightValue is DistressSignal.Multiple
+                        && leftValue.value.isEmpty()
+                        && rightValue.value.isEmpty()
+                -> {
+                    index += 1
                 }
 
                 else -> {
@@ -64,9 +82,6 @@ class DistressSignalExecutor {
                     )
                 }
             }
-
-            leftIndex += 1
-            rightIndex += 1
         }
 
         println("isInCorrectOrder")

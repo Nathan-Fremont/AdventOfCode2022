@@ -20,13 +20,15 @@ fun main(args: Array<String>) {
             )
 
             val signalsWithResult = distressSignalExecutor.executePairsOfSignals(pairsOfSignals)
-            val sumOfIndices = signalsWithResult
+            val signalsInOrder = signalsWithResult
                 .filter { distressSignalResult ->
                     distressSignalResult.isInCorrectOrder
                 }
-                .sumOf { distressSignalResult ->
-                    distressSignalResult.indexInList
+            val indices = signalsInOrder
+                .map { signal ->
+                    signal.indexInList
                 }
+            val sumOfIndices = indices.sum()
             println("main ${"sumOfIndices" to sumOfIndices}")
         }
 }

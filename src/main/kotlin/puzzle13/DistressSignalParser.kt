@@ -13,22 +13,13 @@ class DistressSignalParser {
         val pairsOfSignals = fileLines
             .chunked(2)
             .map { pairOfSignals ->
-                parseLineToDistressSignal(
+                findArray(
                     distressSignalAsString = pairOfSignals[0],
-                ) to parseLineToDistressSignal(
+                ) to findArray(
                     distressSignalAsString = pairOfSignals[1],
                 )
             }
         return pairsOfSignals
-    }
-
-    private fun parseLineToDistressSignal(distressSignalAsString: String): DistressSignal? {
-        println("parseLineToDistressSignal")
-        var tempString = distressSignalAsString
-        val foundDistressSignal = findArray(distressSignalAsString = tempString)
-//        println("parseLineToDistressSignal ${"foundDistressSignal" to foundDistressSignal}")
-
-        return foundDistressSignal
     }
 
     private fun findArray(distressSignalAsString: String?): DistressSignal? {
