@@ -3,7 +3,7 @@ package puzzle13
 import kotlin.math.max
 
 class DistressSignalExecutor {
-    fun executePairsOfSignals(pairsOfSignals: List<Pair<DistressSignal?, DistressSignal?>>): List<DistressSignalResult> {
+    fun executePairsOfSignals(pairsOfSignals: List<Pair<DistressSignal?, DistressSignal?>>): DistressSignalExecutorResult {
         println("executePairsOfSignals")
         val result = pairsOfSignals
             .mapIndexed { index, pairOfSignals ->
@@ -14,17 +14,22 @@ class DistressSignalExecutor {
                     isInCorrectOrder = isInCorrectOrder(
                         leftSignal = pairOfSignals.first,
                         rightSignal = pairOfSignals.second,
-                    )
+                    )!!
                 )
 //                println("executePairsOfSignals ${"resultForIndex" to resultForIndex}")
                 resultForIndex
             }
 
         println("executePairsOfSignals ${"result" to result}")
-        return result
+
+        val ordered = sortByOrder(result)
+        return DistressSignalExecutorResult(
+            distressSignalsResults = result,
+            distressSignalsInOrder = ordered,
+        )
     }
 
-    private fun isInCorrectOrder(leftSignal: DistressSignal?, rightSignal: DistressSignal?): Boolean {
+    private fun isInCorrectOrder(leftSignal: DistressSignal?, rightSignal: DistressSignal?): Boolean? {
         val leftList = when (leftSignal) {
             is DistressSignal.Multiple -> leftSignal.value
             is DistressSignal.Single -> listOf(leftSignal)
@@ -76,15 +81,48 @@ class DistressSignalExecutor {
                 }
 
                 else -> {
-                    return isInCorrectOrder(
+                    val order = isInCorrectOrder(
                         leftSignal = leftValue,
                         rightSignal = rightValue,
                     )
+                    if (order == null) {
+                        index += 1
+                    } else {
+                        return order
+                    }
                 }
             }
         }
 
-        println("isInCorrectOrder")
-        return true
+        return null
+    }
+
+    private fun sortByOrder(distressSignalsResults: List<DistressSignalResult>): List<DistressSignal> {
+        val flattened = distressSignalsResults
+            .flatMap { result ->
+                listOfNotNull(
+                    result.leftSignal,
+                    result.rightSignal,
+                )
+            }
+        println("executePairsOfSignals ${"flattened" to flattened}")
+
+        val ordered = flattened
+            .sortedWith { o1, o2 ->
+                if (isInCorrectOrder(
+                        leftSignal = o1,
+                        rightSignal = o2,
+                    )!!
+                ) {
+                    // o1 is before
+                    -1
+                } else {
+                    // o1 is after
+                    1
+                }
+            }
+
+        println("executePairsOfSignals ${"ordered" to ordered}")
+        return ordered
     }
 }

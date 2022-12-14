@@ -17,10 +17,15 @@ fun main(args: Array<String>) {
         ?.also { fileContent ->
             val pairsOfSignals = distressSignalParser.parseFileContentToDistressSignals(
                 fileContent = fileContent,
+                addDecoderKeys = true,
             )
 
-            val signalsWithResult = distressSignalExecutor.executePairsOfSignals(pairsOfSignals)
-            val signalsInOrder = signalsWithResult
+            val distressSignalExecutorResult = distressSignalExecutor.executePairsOfSignals(
+                pairsOfSignals = pairsOfSignals,
+            )
+            // Part1 : 5252
+            val signalsInOrder = distressSignalExecutorResult
+                .distressSignalsResults
                 .filter { distressSignalResult ->
                     distressSignalResult.isInCorrectOrder
                 }
@@ -30,5 +35,22 @@ fun main(args: Array<String>) {
                 }
             val sumOfIndices = indices.sum()
             println("main ${"sumOfIndices" to sumOfIndices}")
+
+            // Part2 :
+            val foundDecoderKeys = distressSignalExecutorResult
+                .distressSignalsInOrder
+                .mapIndexed { index, distressSignal ->
+                    if (distressSignal.isDecoderKey) {
+                        index + 1
+                    } else {
+                        1
+                    }
+                }
+            println("main ${"foundDecoderKeys" to foundDecoderKeys}")
+            val multipliedDecoderKeysIndex = foundDecoderKeys
+                .reduce { acc, i ->
+                    acc * i
+                }
+            println("main ${"multipliedDecoderKeysIndex" to multipliedDecoderKeysIndex}")
         }
 }

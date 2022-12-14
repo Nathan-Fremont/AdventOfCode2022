@@ -1,10 +1,12 @@
 package puzzle13
 
 import FileUtils
-import java.io.File
 
 class DistressSignalParser {
-    fun parseFileContentToDistressSignals(fileContent: String): List<Pair<DistressSignal?, DistressSignal?>> {
+    fun parseFileContentToDistressSignals(
+        fileContent: String,
+        addDecoderKeys: Boolean = false,
+    ): List<Pair<DistressSignal?, DistressSignal?>> {
         println("parseFileContentToDistressSignals")
         val fileLines = FileUtils.splitStringWithDelimiter(
             fileContent = fileContent,
@@ -19,6 +21,15 @@ class DistressSignalParser {
                     distressSignalAsString = pairOfSignals[1],
                 )
             }
+            .toMutableList()
+
+        if (addDecoderKeys) {
+            DECODER_KEYS.forEach { decoderKey ->
+                pairsOfSignals += findArray(
+                    distressSignalAsString = decoderKey
+                ) to null
+            }
+        }
         return pairsOfSignals
     }
 
@@ -62,12 +73,16 @@ class DistressSignalParser {
                     )
                 } else {
                     return@map DistressSignal.Single(
+                        stringValue = value,
+                        isDecoderKey = DECODER_KEYS.contains(value),
                         value = value.toInt()
                     )
                 }
             }
 
         return DistressSignal.Multiple(
+            stringValue = distressSignalAsString,
+            isDecoderKey = DECODER_KEYS.contains(distressSignalAsString),
             value = distressed.filterNotNull(),
         )
     }
@@ -78,5 +93,9 @@ class DistressSignalParser {
         private const val VALUE_DELIMITER = ','
         private const val ARRAY_ROOT_LAYER = 0
         private const val ARRAY_ROOT_LAYER_DELIMITER = '#'
+        private val DECODER_KEYS = listOf<String>(
+            "[[2]]",
+            "[[6]]",
+        )
     }
 }
