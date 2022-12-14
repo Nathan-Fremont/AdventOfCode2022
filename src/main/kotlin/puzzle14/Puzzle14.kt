@@ -9,13 +9,18 @@ private val fileUtils = FileUtils(
     inputFileNameExample = INPUT_FILE_NAME_EXAMPLE,
 )
 private val fallingSandRocksParser = FallingSandRocksParser()
+private val fallingSandRocksExecutor = FallingSandRocksExecutor()
 
 fun main(args: Array<String>) {
     println("main")
-    fileUtils.getFileContentFromFile()
+    fileUtils.getFileContentFromFileExample()
         ?.also { fileContent ->
-            val rocksForFallingSand = fallingSandRocksParser.parseFileToRocks(
+            val listOfRocksPaths = fallingSandRocksParser.parseFileToListOfRocksPaths(
                 fileContent = fileContent,
+            )
+
+            fallingSandRocksExecutor.createGridWithListOfRocksPaths(
+                listOfRocksPaths = listOfRocksPaths,
             )
         }
 }
