@@ -31,43 +31,77 @@ class FallingSandRocksExecutor {
 
         val deltaX = (maxXValue.x - minXValue.x) + 1
         val deltaY = (maxYValue.y - minYValue.y) + 1
-        println("createGridWithListOfRocksPaths" +
-                "${"minXValue" to minXValue}," +
-                "${"maxXValue" to maxXValue}," +
-                "${"deltaX" to deltaX}" +
-                "${"deltaY" to deltaY}")
+        println(
+            "createGridWithListOfRocksPaths" +
+                    "${"minXValue" to minXValue}," +
+                    "${"maxXValue" to maxXValue}," +
+                    "${"deltaX" to deltaX}" +
+                    "${"deltaY" to deltaY}"
+        )
 
         gridOfSquares = mutableListOf()
-        repeat(maxYValue.y) { yIndex ->
+        repeat(maxYValue.y + 1) { yIndex ->
             gridOfSquares += mutableListOf<GridSquare>()
             repeat(VOID_PADDING) { voidIndex ->
                 gridOfSquares.last() += GridSquare.Void(
                     originalXValue = -1,
                     xValueInGrid = voidIndex,
+                    yValueInGrid = yIndex,
+                )
+            }
+            repeat(AIR_PADDING) { airIndex ->
+                gridOfSquares.last() += GridSquare.Air(
+                    originalXValue = -1,
+                    xValueInGrid = airIndex,
                     yValueInGrid = yIndex,
                 )
             }
             for (xIndex in 0 until deltaX) {
                 gridOfSquares.last() += GridSquare.Air(
                     originalXValue = minXValue.x + xIndex,
-                    xValueInGrid = xIndex + VOID_PADDING,
+                    xValueInGrid = xIndex + VOID_PADDING + AIR_PADDING,
                     yValueInGrid = yIndex,
                 )
             }
             repeat(VOID_PADDING) { voidIndex ->
                 gridOfSquares.last() += GridSquare.Void(
                     originalXValue = -1,
-                    xValueInGrid = VOID_PADDING + deltaX + voidIndex,
+                    xValueInGrid = VOID_PADDING + AIR_PADDING + deltaX + voidIndex,
+                    yValueInGrid = yIndex,
+                )
+            }
+            repeat(AIR_PADDING) { airIndex ->
+                gridOfSquares.last() += GridSquare.Air(
+                    originalXValue = -1,
+                    xValueInGrid = VOID_PADDING + AIR_PADDING + deltaX + airIndex,
                     yValueInGrid = yIndex,
                 )
             }
         }
         repeat(VOID_PADDING) { voidIndex ->
             gridOfSquares += mutableListOf<GridSquare>()
-            for (xIndex in 0 until deltaX + VOID_PADDING * 2) {
+            for (xIndex in 0 until deltaX + (VOID_PADDING * 2) + (AIR_PADDING * 2)) {
                 gridOfSquares.last() += GridSquare.Void(
                     originalXValue = -1,
                     xValueInGrid = voidIndex,
+                    yValueInGrid = gridOfSquares.size - 1,
+                )
+            }
+        }
+        if (AIR_PADDING > 0) {
+            gridOfSquares += mutableListOf<GridSquare>()
+            for (xIndex in 0 until deltaX + (VOID_PADDING * 2) + (AIR_PADDING * 2)) {
+                gridOfSquares.last() += GridSquare.Air(
+                    originalXValue = -1,
+                    xValueInGrid = xIndex,
+                    yValueInGrid = gridOfSquares.size - 1,
+                )
+            }
+            gridOfSquares += mutableListOf<GridSquare>()
+            for (xIndex in 0 until deltaX + (VOID_PADDING * 2) + (AIR_PADDING * 2)) {
+                gridOfSquares.last() += GridSquare.Rock(
+                    originalXValue = -1,
+                    xValueInGrid = xIndex,
                     yValueInGrid = gridOfSquares.size - 1,
                 )
             }
@@ -86,7 +120,7 @@ class FallingSandRocksExecutor {
 //        drawGrid()
     }
 
-    private fun simulateFallingSandForTurns(numberOfTurns: Int = 5_000): Int {
+    private fun simulateFallingSandForTurns(numberOfTurns: Int = 5_000_000): Int {
         for (turnCount in 0 until numberOfTurns + 1) {
             _turnCount = turnCount
             if (!simulateSandUntilItRests()) {
@@ -205,6 +239,9 @@ class FallingSandRocksExecutor {
     }
 
     private fun drawGrid() {
+        if (!CAN_DRAW_GRID) {
+            return
+        }
         val gridAsString = gridOfSquares.joinToString(separator = "\n") { lineOfSquares ->
             "${lineOfSquares[0].yValueInGrid} ${
                 lineOfSquares.joinToString(separator = "") { square ->
@@ -323,7 +360,9 @@ class FallingSandRocksExecutor {
     }
 
     companion object {
+        private const val CAN_DRAW_GRID = false
         private const val VOID_PADDING = 0
-        private const val AIR_PADDING = 1
+        private const val AIR_PADDING = 1_000
+        private const val HAS_ROCK_LAYER = true
     }
 }
