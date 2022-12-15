@@ -20,7 +20,7 @@ fun main(args: Array<String>) {
             )
 
             // Part 1 : 897
-            // Part 2 :
+            // Part 2 : 26682
             fallingSandRocksExecutor.createGridWithListOfRocksPaths(
                 listOfRocksPaths = listOfRocksPaths,
             )
