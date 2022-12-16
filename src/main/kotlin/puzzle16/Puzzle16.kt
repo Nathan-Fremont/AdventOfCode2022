@@ -22,5 +22,12 @@ fun main(args: Array<String>) {
             val valvesExecutorResult = valvesExecutor.findBestPathForValves(
                 valvesParserResult = valvesParserResult,
             )
+
+//            println("valvesExecutorResult ${"valvesExecutorResult" to valvesExecutorResult}")
+            val valvesOpened = valvesExecutorResult.valves.filter { valve ->
+                valve.isOpened
+            }.map { it.valveLabel }
+            println("valvesExecutorResult ${"valvesOpened" to valvesOpened}")
+            println("valvesExecutorResult ${"valvesExecutorResult.totalPressure" to valvesExecutorResult.totalPressure}")
         }
 }

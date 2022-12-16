@@ -1,3 +1,6 @@
 package puzzle16
 
-object ValvesExecutorResult
+data class ValvesExecutorResult(
+    val valves: List<Valve>,
+    val totalPressure: Int,
+)

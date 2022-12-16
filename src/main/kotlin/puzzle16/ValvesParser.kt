@@ -23,9 +23,11 @@ class ValvesParser {
             }
         }
 
-        return ValvesParserResult(
+        val result = ValvesParserResult(
             valves = listOfValves,
         )
+        println("parseFileContentToListOfValves ${"result" to result}")
+        return result
     }
 
     private fun parseLineToValve(line: String): Valve? {
@@ -40,14 +42,13 @@ class ValvesParser {
                 Valve(
                     lineValue = line,
                     valveLabel = this[1],
-                    flowRate = this[2].toInt(),
+                    flowRate = this[2].toDouble(),
                     tunnelsToLabels = this[3].run {
                         FileUtils.splitStringWithDelimiter(
                             fileContent = this,
                             delimiter = TUNNELS_TO_VALVES_DELIMITER,
                         )
                     },
-                    tunnelsToValve = mutableListOf(),
                 )
             }
     }
