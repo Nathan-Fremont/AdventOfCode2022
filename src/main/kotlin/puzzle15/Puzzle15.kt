@@ -24,7 +24,7 @@ fun main(args: Array<String>) {
             )
             val sabGrid = sensorsExecutor.calculateGridPossiblePositionsForMoreBeaconsInRow(row = 10)//2_000_000)
 
-            // Part 1 :
+            // Part 1 :4641816 ?
             val numberOfNotPossibleBeaconsForPart1 = sabGrid
                 .gridSquares
                 .last()
